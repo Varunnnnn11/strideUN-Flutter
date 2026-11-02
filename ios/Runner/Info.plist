@@ -65,6 +65,12 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>NSLocationWhenInUseUsageDescription</string>
+		<string>Velora needs your location to track your run</string>
+		<string>NSLocationAlwaysUsageDescription</string>
+		<string>Velora needs your location to track your run in background</string>
+		<string>MBXAccessToken</string>
+		<string>$(MAPBOX_ACCESS_TOKEN)</string>
 	</array>
 </dict>
 </plist>

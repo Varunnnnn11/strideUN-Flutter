@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Place this file at:
+  android/app/src/main/res/xml/file_paths.xml
+
+  This allows FileProvider to share temp images with Instagram and Snapchat.
+-->
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <cache-path name="shared_images" path="." />
+    <external-cache-path name="external_cache" path="." />
+    <files-path name="files" path="." />
+</paths>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "226718525725",
+    "project_id": "strideun",
+    "storage_bucket": "strideun.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226718525725:android:4e39e37585c4d4a2c399f4",
+        "android_client_info": {
+          "package_name": "com.example.aurarun_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4_nnepmqvl4G4hwa1YdwKLJ4jj62PUt0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,30 +1,27 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:aurarun_app/main.dart';
+import 'package:aurarun_app/services/api_service.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('GpsBatchPoint serialises to the shape the backend expects', () {
+    final time = DateTime.utc(2026, 11, 2, 9, 30, 0);
+    final json = GpsBatchPoint(
+      lat: 22.7196,
+      lng: 75.8577,
+      speedKmh: 8.5,
+      time: time,
+    ).toJson();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(json['latitude'], 22.7196);
+    expect(json['longitude'], 75.8577);
+    expect(json['speedKmh'], 8.5);
+    expect(json['timestamp'], time.toIso8601String());
+    expect((json['timestamp'] as String).endsWith('Z'), isTrue);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // a local (non-UTC) time must still go out as UTC
+    final local = DateTime(2026, 11, 2, 15, 0, 0);
+    final sent = GpsBatchPoint(lat: 0, lng: 0, speedKmh: 0, time: local).toJson();
+    expect(DateTime.parse(sent['timestamp'] as String).isAtSameMomentAs(local), isTrue);
+    expect((sent['timestamp'] as String).endsWith('Z'), isTrue);
   });
 }

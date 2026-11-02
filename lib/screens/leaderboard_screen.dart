@@ -22,23 +22,26 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Future<void> _loadLeaderboard() async {
     try {
       final data = await ApiService.getLeaderboard();
-      setState(() {
-        _leaderboard = data;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _leaderboard = data;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() { _isLoading = false; });
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   Color _getTrailColor(String? color) {
-    switch (color) {
-      case 'PINK': return const Color(0xFFFF2D78);
-      case 'BLUE': return const Color(0xFF2D8BFF);
-      case 'GREEN': return const Color(0xFF2DFF78);
+    switch (color?.toUpperCase()) {
+      case 'PINK':   return const Color(0xFFFF2D78);
+      case 'BLUE':   return const Color(0xFF4A72FF);
+      case 'GREEN':  return const Color(0xFF00E676);
       case 'ORANGE': return const Color(0xFFFF8C2D);
       case 'PURPLE': return const Color(0xFF8C2DFF);
-      default: return const Color(0xFFFF2D78);
+      case 'CYAN':   return const Color(0xFF00E5FF);
+      default:       return const Color(0xFFFF2D78);
     }
   }
 
@@ -67,24 +70,13 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       body: SafeArea(
         child: Column(children: [
 
-          // Top bar
+          // ── Header — no back button (accessed via bottom nav) ──
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
             child: Row(
               children: [
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Container(
-                    width: 40, height: 40,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0d1320),
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white12),
-                    ),
-                    child: const Icon(Icons.arrow_back,
-                        color: Colors.white54, size: 18),
-                  ),
-                ),
+                // ✅ REMOVED back button — replaced with empty SizedBox
+                const SizedBox(width: 40),
                 const Expanded(
                   child: Center(
                     child: Text('LEADERBOARD',
@@ -98,7 +90,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    setState(() { _isLoading = true; });
+                    if (mounted) setState(() => _isLoading = true);
                     _loadLeaderboard();
                   },
                   child: Container(
@@ -118,7 +110,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 
           const SizedBox(height: 24),
 
-          // Top 3 podium
           if (!_isLoading && _leaderboard.length >= 3)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -126,11 +117,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  // 2nd place
                   _podiumCard(_leaderboard[1], 2, 80),
-                  // 1st place
                   _podiumCard(_leaderboard[0], 1, 110),
-                  // 3rd place
                   _podiumCard(_leaderboard[2], 3, 60),
                 ],
               ),
@@ -138,7 +126,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 
           const SizedBox(height: 24),
 
-          // Rest of leaderboard
           Expanded(
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator(
@@ -187,6 +174,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                       decoration: BoxDecoration(
                         color: color.withValues(alpha: 0.2),
                         shape: BoxShape.circle,
+                        border: Border.all(
+                            color: color.withValues(alpha: 0.5), width: 1.5),
                       ),
                       child: Center(
                         child: Text(
@@ -236,7 +225,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        // Avatar
         Container(
           width: rank == 1 ? 64 : 52,
           height: rank == 1 ? 64 : 52,
@@ -273,7 +261,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
               fontSize: 10,
             )),
         const SizedBox(height: 8),
-        // Podium block
         Container(
           width: rank == 1 ? 90 : 75,
           height: height,
